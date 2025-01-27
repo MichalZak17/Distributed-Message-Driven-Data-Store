@@ -25,8 +25,11 @@ Distributed Message-Driven Data Store is a key-value store implemented in C++ us
 - **Fault Tolerance:** Replays Kafka logs to restore state after node failure.
 
 ### API
-- Exposes gRPC or RESTful API for CRUD operations:
-  - PUT, GET, DELETE, SCAN.
+- Exposes a RESTful API for CRUD operations:
+  - `PUT /key/<key>?value=<value>`: Insert or update a key-value pair.
+  - `GET /key/<key>`: Retrieve the value for a key.
+  - `DELETE /key/<key>`: Delete a key-value pair.
+  - `GET /scan`: Retrieve all key-value pairs in JSON format.
 
 ### Monitoring
 - Metrics for:
@@ -36,8 +39,103 @@ Distributed Message-Driven Data Store is a key-value store implemented in C++ us
 
 ---
 
+## Requirements
+
+### Dependencies
+
+Ensure the following dependencies are installed on your system:
+- C++17 compiler
+- CMake
+- librdkafka and librdkafka++
+- libpqxx and PostgreSQL
+- Crow (included as a single-header library)
+- Asio (networking library for Crow)
+
+#### Install Required Libraries (Ubuntu/Debian)
+```bash
+sudo apt-get update
+sudo apt-get install -y libasio-dev libpqxx-dev librdkafka-dev librdkafka++-dev cmake g++
+```
+
+#### Install Crow (Header-Only)
+Download the Crow single-header file:
+```bash
+wget https://github.com/CrowCpp/Crow/releases/latest/download/crow_all.h -O src/crow_all.h
+```
+
+---
+
+## Build and Run
+
+### Clone the Repository
+```bash
+git clone https://github.com/MichalZak17/Distributed-Message-Driven-Data-Store.git
+cd Distributed-Message-Driven-Data-Store
+```
+
+### Build the Project
+```bash
+mkdir build
+cd build
+cmake ..
+make
+```
+
+### Run the Application
+Ensure Kafka and PostgreSQL are running on your system:
+
+- **Start Kafka:**
+  ```bash
+  kafka-server-start.sh /path/to/server.properties
+  ```
+- **Start PostgreSQL:**
+  Ensure the database and credentials in the code match your setup.
+
+Run the application:
+```bash
+./kafka_postgres_app
+```
+
+---
+
+## Usage
+
+### RESTful API Endpoints
+
+#### **PUT /key/<key>?value=<value>**
+Insert or update a key-value pair.
+```bash
+curl -X PUT "http://localhost:8080/key/foo?value=bar"
+```
+
+#### **GET /key/<key>**
+Retrieve the value for a key.
+```bash
+curl "http://localhost:8080/key/foo"
+```
+
+#### **DELETE /key/<key>**
+Delete a key-value pair.
+```bash
+curl -X DELETE "http://localhost:8080/key/foo"
+```
+
+#### **GET /scan**
+Retrieve all key-value pairs in JSON format.
+```bash
+curl "http://localhost:8080/scan"
+```
+
+---
+
 ## Contribution
-Contributions are welcome! Please submit a pull request or open an issue for feedback and improvements.
+
+Contributions are welcome! To contribute:
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature-name`).
+3. Commit your changes (`git commit -m 'Add new feature'`).
+4. Push to the branch (`git push origin feature-name`).
+5. Create a pull request.
 
 ---
 
